@@ -11,6 +11,7 @@ const Menu = electron.Menu;
 
 const injectBundle = require('./inject-onload.js');
 const messageHandler = require('./message.js');
+const updateHandler = require('./update.js');
 
 const WINDOW_TITLE = 'Electronic WeChat';
 
@@ -79,6 +80,7 @@ let createWindow = () => {
   });
 
   createTray();
+  updateHandler.checkForUpdate('v' + app.getVersion(), true);
 };
 
 app.on('ready', createWindow);
@@ -105,6 +107,10 @@ ipcMain.on('log', (event, message) => {
 
 ipcMain.on('reload', (event, message) => {
   browserWindow.loadURL("https://wx.qq.com/");
+});
+
+ipcMain.on('update', (event, message) => {
+  updateHandler.checkForUpdate('v' + app.getVersion(), false);
 });
 
 let createTray = () => {
